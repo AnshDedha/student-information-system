@@ -1,78 +1,39 @@
-!pip install ipywidgets -q
+import streamlit as st
 
-import ipywidgets as widgets
-from IPython.display import display, clear_output
+st.title("Student Information System")
+st.write("Enter student details and view the submitted information.")
 
-title = widgets.HTML("<h2>Student Information System</h2>")
-description = widgets.HTML("<p>Enter student details and view the submitted information.</p>")
+student_name = st.text_input("Enter Student Name")
 
-name = widgets.Text(
-    description='Name:',
-    placeholder='Enter Student Name'
+roll_number = st.number_input(
+    "Enter Roll Number",
+    min_value=1,
+    step=1
 )
 
-roll = widgets.IntText(
-    description='Roll No:',
-    value=1
+course = st.selectbox(
+    "Select Course",
+    ["BCA", "B.Tech", "B.Sc", "B.Com", "MCA"]
 )
 
-course = widgets.Dropdown(
-    options=['BCA', 'B.Tech', 'B.Sc', 'B.Com', 'MCA'],
-    description='Course:'
+subjects = st.multiselect(
+    "Select Subjects",
+    ["Python", "Java", "DBMS", "AWS", "MongoDB", "Machine Learning", "Data Science"]
 )
 
-subjects = widgets.SelectMultiple(
-    options=['Python', 'Java', 'DBMS', 'AWS', 'MongoDB', 'Machine Learning', 'Data Science'],
-    description='Subjects:'
-)
+marks = st.slider("Marks", 0, 100, 50)
 
-marks = widgets.IntSlider(
-    value=50,
-    min=0,
-    max=100,
-    step=1,
-    description='Marks:'
-)
+if st.button("Submit"):
+    if student_name.strip() == "":
+        st.error("Student Name cannot be empty.")
+    elif len(subjects) == 0:
+        st.error("Please select at least one subject.")
+    else:
+        st.success("Student details submitted successfully!")
 
-submit = widgets.Button(
-    description='Submit',
-    button_style='success'
-)
-
-output = widgets.Output()
-
-
-def show_details(b):
-    with output:
-        clear_output()
-
-        
-        if name.value.strip() == "":
-            print("❌ Error: Student Name cannot be empty.")
-            return
-
-        if len(subjects.value) == 0:
-            print("❌ Error: Please select at least one subject.")
-            return
-
-        print("✅ Student details submitted successfully!\n")
-        print("----- Student Details -----")
-        print("Student Name :", name.value)
-        print("Roll Number  :", roll.value)
-        print("Course       :", course.value)
-        print("Subjects     :", ", ".join(subjects.value))
-        print("Marks        :", marks.value)
-
-submit.on_click(show_details)
-
-display(
-    title,
-    description,
-    name,
-    roll,
-    course,
-    subjects,
-    marks,
-    submit,
-    output
-)
+        st.subheader("Student Details")
+        st.write("Student Name:", student_name)
+        st.write("Roll Number:", roll_number)
+        st.write("Course:", course)
+        st.write("Subjects:", ", ".join(subjects))
+        st.write("Marks:", marks)
